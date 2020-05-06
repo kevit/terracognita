@@ -9,6 +9,7 @@ require (
 	github.com/aws/aws-sdk-go v1.25.4
 	github.com/chr4/pwgen v1.1.0
 	github.com/cycloidio/tfdocs v0.0.0-20200111145532-e6a80a93d7cc
+	github.com/davecgh/go-spew v1.1.1
 	github.com/go-kit/kit v0.9.0
 	github.com/golang/mock v1.3.1
 	github.com/hashicorp/go-azure-helpers v0.9.0
@@ -16,6 +17,9 @@ require (
 	github.com/hashicorp/hil v0.0.0-20190212132231-97b3a9cdfa93 // indirect
 	github.com/hashicorp/terraform v0.12.8
 	github.com/hashicorp/vault v1.0.3 // indirect
+	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
+	github.com/jinzhu/inflection v1.0.0
+	github.com/mitchellh/reflectwalk v1.0.1 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.4.0
