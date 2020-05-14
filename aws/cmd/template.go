@@ -179,7 +179,7 @@ type Function struct {
 	// so this value has to be the correct name on the input
 	FilterByOwner string
 
-	// HasPagination flags if the resource has NextToken logic or not
+	// HasNotPagination flags if the resource has NextToken logic or not
 	HasNotPagination bool
 
 	// HasNoSlice means that it's not an [] to return but a single item
