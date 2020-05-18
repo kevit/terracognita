@@ -24,16 +24,16 @@ type aws struct {
 }
 
 // NewProvider returns an AWS Provider
-func NewProvider(ctx context.Context, accessKey, secretKey, region string) (provider.Provider, error) {
+func NewProvider(ctx context.Context, profile, shared_credentials_file, region string) (provider.Provider, error) {
 	log.Get().Log("func", "reader.New", "msg", "configuring aws Reader")
-	awsr, err := reader.New(ctx, accessKey, secretKey, region, nil)
+	awsr, err := reader.New(ctx, profile, shared_credentials_file, region, nil)
 	if err != nil {
 		return nil, fmt.Errorf("could not initialize 'reader' because: %s", err)
 	}
 
 	cfg := tfaws.Config{
-		AccessKey: accessKey,
-		SecretKey: secretKey,
+		Profile: profile,
+		CredsFilename: shared_credentials_file,
 		Region:    region,
 	}
 
