@@ -29,8 +29,7 @@ var (
 		Long:  "Terracognita reads from AWS and generates hcl resources and/or terraform state",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			preRunEOutput(cmd, args)
-			viper.BindPFlag("shared_credentials_file", cmd.Flags().Lookup("shared_credentials_file"))
-			viper.BindPFlag("profile", cmd.Flags().Lookup("profile"))		
+			viper.BindPFlag("profile", cmd.Flags().Lookup("profile"))
 			viper.BindPFlag("region", cmd.Flags().Lookup("region"))
 			viper.BindPFlag("tags", cmd.Flags().Lookup("tags"))
 		},
@@ -55,7 +54,7 @@ var (
 
 			ctx := context.Background()
 
-			awsP, err := aws.NewProvider(ctx, viper.GetString("shared_credentials_file"), viper.GetString("profile"), viper.GetString("region"))
+			awsP, err := aws.NewProvider(ctx, viper.GetString("profile"))
 			if err != nil {
 				return err
 			}
@@ -97,7 +96,6 @@ func init() {
 	awsCmd.AddCommand(awsResourcesCmd)
 
 	// Required flags
-	awsCmd.Flags().String("shared_credentials_file", "", "Shared credentials file (required)")
 	awsCmd.Flags().String("profile", "", "Profile (required)")
 	awsCmd.Flags().String("region", "", "Region to search in, for now * it's not supported (required)")
 

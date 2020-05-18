@@ -24,23 +24,18 @@ type aws struct {
 }
 
 // NewProvider returns an AWS Provider
-func NewProvider(ctx context.Context, profile, shared_credentials_file, region string) (provider.Provider, error) {
+func NewProvider(ctx context.Context, profile string) (provider.Provider, error) {
 	log.Get().Log("func", "reader.New", "msg", "configuring aws Reader")
-	awsr, err := reader.New(ctx, profile, shared_credentials_file, region, nil)
+	awsr, err := reader.New(ctx, profile)
 	if err != nil {
 		return nil, fmt.Errorf("could not initialize 'reader' because: %s", err)
 	}
 
-	cfg := tfaws.Config{
-		Profile: profile,
-		CredsFilename: shared_credentials_file,
-		Region:    region,
-	}
-
+	cfg := tfaws.Config{}
 	log.Get().Log("func", "aws.NewProvider", "msg", "configuring TF Client")
 	awsClient, err := cfg.Client()
 	if err != nil {
-		return nil, fmt.Errorf("could not initialize 'terraform/aws.Config.Client()' because: %s", err)
+	return nil, fmt.Errorf("could not initialize 'terraform/aws.Config.Client()' because: %s", err)
 	}
 
 	tfp := tfaws.Provider().(*schema.Provider)

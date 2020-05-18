@@ -42,10 +42,11 @@ import (
 // See:
 //  * https://docs.aws.amazon.com/AWSEC2/latest/APIReference/errors-overview.html#CommonErrors
 //  * https://docs.aws.amazon.com/STS/latest/APIReference/CommonErrors.html
-func New(ctx context.Context, accessKey string, secretKey string, region string, config *aws.Config) (Reader, error) {
+func New(ctx context.Context, profile string) (Reader, error) {
 	var c = connector{}
+	const region string = "eu-central-1"
 
-	creds, ec2s, sts, err := configureAWS(accessKey, secretKey)
+	creds, ec2s, sts, err := configureAWSprofile(profile)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +59,7 @@ func New(ctx context.Context, accessKey string, secretKey string, region string,
 		return nil, err
 	}
 
-	c.setService(config)
+	// c.setService(config)
 
 	return &c, nil
 }
@@ -104,12 +105,10 @@ type serviceConnector struct {
 	autoscaling     autoscalingiface.AutoScalingAPI
 }
 
-// configureAWS creates a new static credential with the passed accessKey and
-// secretKey and with it, a sessions which is used to create a EC2 client and
-// a Security Token Service client.
-// The only AWS error code that this function return is
-// * EmptyStaticCreds
-func configureAWS(accessKey string, secretKey string) (*credentials.Credentials, ec2iface.EC2API, stsiface.STSAPI, error) {
+
+
+//
+func configureAWSprofile(profile string) (*credentials.Credentials, ec2iface.EC2API, stsiface.STSAPI, error) {
 	/* The default region is only used to (1) get the list of region and
 	 * (2) get the account ID associated with the credentials.
 	 *
@@ -117,10 +116,11 @@ func configureAWS(accessKey string, secretKey string) (*credentials.Credentials,
 	 * region is specified when instantiating the connector, then it will
 	 * not try to establish any connections with AWS services.
 	 */
-	const defaultRegion string = "eu-west-1"
-	var token = ""
+	const defaultRegion string = "eu-central-1"
+	const defaultCredentialsFilename string = "credentials"
 
-	creds := credentials.NewStaticCredentials(accessKey, secretKey, token)
+
+	creds := credentials.NewSharedCredentials(defaultCredentialsFilename,profile)
 	_, err := creds.Get()
 	if err != nil {
 		return nil, nil, nil, err
@@ -135,6 +135,11 @@ func configureAWS(accessKey string, secretKey string) (*credentials.Credentials,
 	)
 	return creds, ec2.New(sess), sts.New(sess), nil
 }
+// configureAWS creates a new static credential with the passed accessKey and
+// secretKey and with it, a sessions which is used to create a EC2 client and
+// a Security Token Service client.
+// The only AWS error code that this function return is
+// * EmptyStaticCreds
 
 // setAccountID retrieves the caller ID from the Security Token Service and set
 // it in the connector.
